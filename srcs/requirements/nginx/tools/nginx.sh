@@ -8,4 +8,6 @@ openssl req -x509 -nodes \
     -keyout /etc/nginx/ssl/inception.key \
     -subj "/C=AE/ST=AbuDhabi/L=AbuDhabi/O=42/OU=Inception/CN=${DOMAIN_NAME}"
 
+sed -i "s/\${DOMAIN_NAME}/${DOMAIN_NAME}/g" /etc/nginx/nginx.conf
+
 exec nginx -g "daemon off;"

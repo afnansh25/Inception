@@ -1,19 +1,23 @@
+LOGIN = ashaheen
+DATA_DIR = /home/$(LOGIN)/data
 COMPOSE = docker compose -f srcs/docker-compose.yml
 
 all:
-	$(COMPOSE) up --build
+	mkdir -p $(DATA_DIR)/mariadb $(DATA_DIR)/wordpress
+	$(COMPOSE) up --build -d
 
 up:
 	$(COMPOSE) up -d
 
 down:
-	$(COMPOSE) down
+	$(COMPOSE) down --remove-orphans
 
 clean:
-	$(COMPOSE) down --rmi all
+	$(COMPOSE) down --remove-orphans
 
 fclean:
-	$(COMPOSE) down --rmi all --volumes
+	$(COMPOSE) down -v --remove-orphans
+	docker run --rm -v $(DATA_DIR):/data debian:bullseye sh -c "rm -rf /data/mariadb /data/wordpress"
 
 re: fclean all
 
